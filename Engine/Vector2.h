@@ -41,6 +41,14 @@ public:
 	{
 		return *this = *this*rhs;
 	}
+	constexpr Vector2 operator/(T rhs) const
+	{
+		return Vector2(x / rhs, y / rhs);
+	}
+	constexpr Vector2 operator/=(T rhs)
+	{
+		return *this = *this / rhs;
+	}
 
 	constexpr Vector2 operator-() const
 	{

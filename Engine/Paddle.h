@@ -63,7 +63,7 @@ public:
 
 	RectI GetRect() const
 	{
-		return RectI::MakeRectangle((Vec2i) pos, width, height);
+		return RectI::MakeRectangle((Vec2i) pos, (int)width, (int)height);
 	}
 
 	auto GetWidth() const
@@ -80,6 +80,20 @@ public:
 		return pos;
 	}
 
+	void set_on_cooldown()
+	{
+		on_cooldown = true;
+	}
+	void set_off_cooldown()
+	{
+		on_cooldown = false;
+	}
+
+	bool is_on_cooldown() const
+	{
+		return on_cooldown;
+	}
+
 public:
 	static constexpr int margin_offset = 15;
 	static constexpr float default_width = 15.0f;
@@ -88,8 +102,10 @@ public:
 private:
 	float vel = 400.5f;
 	float width = 15.0f;
-	float height = 115.0f;
+	float height = 150.0f;
 
 	Vec2f pos;
 	Color color;
+
+	bool on_cooldown = false;
 };

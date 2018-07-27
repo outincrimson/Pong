@@ -26,21 +26,20 @@ public:
 		}
 		return 0;
 	}
-	void Handle_collision(const Paddle& p, float dt)
+	bool Handle_collision(Paddle& p, float dt)
 	{
-		if(GetRect().is_overlapping(p.GetRect()))
+		if(!p.is_on_cooldown() && GetRect().is_overlapping(p.GetRect()))
 		{
 			auto paddle_pos = p.GetPos();
 			if(vel.x > 0.0f)
 			{
 				if((col_sign(vel.x) != col_sign((pos - paddle_pos).x)) ||
-					(pos.x <= paddle_pos.x && pos.x + width > paddle_pos.x)&& pos.x+width <= paddle_pos.x+p.GetWidth())
+					(pos.x <= paddle_pos.x && pos.x + width >= paddle_pos.x)&& pos.x+width <= paddle_pos.x+p.GetWidth())
 				{
 					vel.x = -vel.x;
 				}
 				else
 				{
-					auto prec = pos - paddle_pos;
 					vel.y = -vel.y;
 				}
 			}
@@ -58,12 +57,45 @@ public:
 				}
 			}
 			vel = vel * speed_up_factor;
+			p.set_on_cooldown();
+			return true;
 		}
+		return false;
 	}
-
-	void Update(float dt)
+	
+	void Update(float dt, Paddle& p1, Paddle& p2)
 	{
-		pos += vel * dt;
+		auto next_pos_offset = vel * dt;
+		if(vel.x < 0.0f)
+		{
+			for(int i = 0; i < 5; i++)
+			{
+				pos += next_pos_offset / 5.0f;
+				if(Handle_collision(p1, dt))
+				{
+					if(p2.is_on_cooldown())
+					{
+						p2.set_off_cooldown();
+					}
+					break;
+				}
+			}
+		}
+		else
+		{
+			for(int i = 0; i < 5; i++)
+			{
+				pos += next_pos_offset / 5.0f;
+				if(Handle_collision(p2, dt))
+				{
+					if(p1.is_on_cooldown())
+					{
+						p1.set_off_cooldown();
+					}
+					break;
+				}
+			}
+		}
 
 		if(pos.x < 0.0f || pos.x + width >= Graphics::ScreenWidth)
 		{
@@ -91,14 +123,14 @@ public:
 
 	RectI GetRect() const
 	{
-		return Rectangle_<int>::MakeRectangle((Vec2i)pos, width, height);
+		return Rectangle_<int>::MakeRectangle((Vec2i)pos, (int)width, (int)height);
 	}
 private:
 	static constexpr float speed_up_factor = 1.05f;
 
 	Vec2f pos;
 
-	Vec2f vel = { 400.0f,400.0f };
+	Vec2f vel = { 500.0f,500.0f };
 	float width = 10.0f;
 	float height = 10.0f;
 	bool on_screen = true;

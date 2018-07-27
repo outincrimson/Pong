@@ -46,12 +46,9 @@ void Game::Go()
 
 void Game::UpdateModel(float dt)
 {
-
 	p1.Update<Paddle::Control_type::control1>(wnd.kbd,dt);
 	p2.Update<Paddle::Control_type::control2>(wnd.kbd,dt);
-	brick.Update(dt);
-	brick.Handle_collision(p2,dt);
-	brick.Handle_collision(p1,dt);
+	brick.Update(dt, p1, p2);
 }
 
 void Game::ComposeFrame()
