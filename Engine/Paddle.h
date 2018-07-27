@@ -1,49 +1,49 @@
 #pragma once
 #include "Graphics.h"
 
-enum class Control_type
-{
-	control1,
-	control2
-};
 
 
-template<Control_type control_type>
-class Paddle_
+class Paddle
 {
 public:
-
-	Paddle_(Vec2f pos, Color color = Colors::White)
+	enum class Control_type
+	{
+		control1,
+		control2
+	};
+public:
+	Paddle(Vec2f pos, Color color = Colors::White)
 		:
 		pos(pos),
 		color(color)
 	{ }
 
-	void Update(Keyboard& kbd)
+
+	template<Control_type type>
+	void Update(Keyboard& kbd, float dt)
 	{
-		if constexpr(control_type == Control_type::control1)
+		if constexpr(type == Control_type::control1)
 		{
 			if(kbd.KeyIsPressed('W'))
 			{
-				pos.y -= vel;
+				pos.y -= vel*dt;
 			}
 			if(kbd.KeyIsPressed('S'))
 			{
-				pos.y += vel;
+				pos.y += vel*dt;
 			}
 		}
 		else
 		{
 			if(kbd.KeyIsPressed(VK_UP))
 			{
-				pos.y -= vel;
+				pos.y -= vel*dt;
 			}
 			if(kbd.KeyIsPressed(VK_DOWN))
 			{
-				pos.y += vel;
+				pos.y += vel*dt;
 			}
 		}
-
 
 		if(pos.y + height >= Graphics::ScreenHeight)
 		{
@@ -61,6 +61,11 @@ public:
 		gfx.DrawRect(paddle_rect, color);
 	}
 
+	RectI GetRect() const
+	{
+		return RectI::MakeRectangle((Vec2i) pos, width, height);
+	}
+
 	auto GetWidth() const
 	{
 		return width;
@@ -70,20 +75,21 @@ public:
 		return height;
 	}
 
+	Vec2f GetPos() const
+	{
+		return pos;
+	}
+
 public:
 	static constexpr int margin_offset = 15;
-	static constexpr float default_width = 10.0f;
+	static constexpr float default_width = 15.0f;
 	static constexpr float default_height = 115.0f;
 
 private:
-	float vel = 6.5f;
-	float width = 10.0f;
+	float vel = 400.5f;
+	float width = 15.0f;
 	float height = 115.0f;
 
 	Vec2f pos;
 	Color color;
 };
-
-
-
-using Paddle = Paddle_<Control_type::control1>;

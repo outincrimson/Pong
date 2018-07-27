@@ -1,5 +1,5 @@
-/****************************************************************************************** 
- *	Chili DirectX Framework Version 16.07.20											  *	
+/******************************************************************************************
+ *	Chili DirectX Framework Version 16.07.20											  *
  *	Game.cpp																			  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
  *																						  *
@@ -26,26 +26,37 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd),
 	p1({ (float) Paddle::margin_offset,Graphics::ScreenHeight / 2 - (Paddle::default_height / 2) }),
-	p2({ Graphics::ScreenWidth-Paddle::default_width-Paddle::margin_offset,Graphics::ScreenHeight / 2 - (Paddle::default_height / 2) })
-{
-}
+	p2({ Graphics::ScreenWidth - Paddle::default_width - Paddle::margin_offset,Graphics::ScreenHeight / 2 - (Paddle::default_height / 2) }),
+	brick({ Graphics::ScreenWidth / 2,Graphics::ScreenHeight / 2 })
+{ }
 
 void Game::Go()
 {
-	gfx.BeginFrame();	
-	UpdateModel();
+	gfx.BeginFrame();
+	float elapsedTime = ft.Mark();
+	while(elapsedTime > 0.0f)
+	{
+		const float dt = std::min(0.0025f, elapsedTime);
+		UpdateModel(dt);
+		elapsedTime -= dt;
+	}
 	ComposeFrame();
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()
+void Game::UpdateModel(float dt)
 {
-	p1.Update(wnd.kbd);
-	p2.Update(wnd.kbd);
+
+	p1.Update<Paddle::Control_type::control1>(wnd.kbd,dt);
+	p2.Update<Paddle::Control_type::control2>(wnd.kbd,dt);
+	brick.Update(dt);
+	brick.Handle_collision(p2,dt);
+	brick.Handle_collision(p1,dt);
 }
 
 void Game::ComposeFrame()
 {
 	p1.Draw(gfx);
 	p2.Draw(gfx);
+	brick.Draw(gfx);
 }

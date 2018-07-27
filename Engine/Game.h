@@ -24,6 +24,8 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Paddle.h"
+#include "Brick.h"
+#include "FramerTimer.h"
 
 class Game
 {
@@ -34,7 +36,7 @@ public:
 	void Go();
 private:
 	void ComposeFrame();
-	void UpdateModel();
+	void UpdateModel(float dt);
 	/********************************/
 	/*  User Functions              */
 	/********************************/
@@ -43,7 +45,8 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	Paddle_<Control_type::control1> p1;
-	Paddle_<Control_type::control2> p2;
+	FrameTimer ft;
+	Paddle p1, p2;
+	Brick brick;
 	/********************************/
 };
