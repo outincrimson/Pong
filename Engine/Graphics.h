@@ -24,6 +24,7 @@
 #include <wrl.h>
 #include "ChiliException.h"
 #include "Colors.h"
+#include "Rect.h"
 
 class Graphics
 {
@@ -52,6 +53,17 @@ public:
 	Graphics& operator=( const Graphics& ) = delete;
 	void EndFrame();
 	void BeginFrame();
+
+	void DrawRect(const RectI& rect, Color c = Colors::White)
+	{
+		for(int x = rect.left; x <= rect.right; ++x)
+		{
+			for(int y = rect.top; y <= rect.bottom; ++y)
+			{
+				PutPixel(x, y, c);
+			}
+		}
+	}
 	void PutPixel( int x,int y,int r,int g,int b )
 	{
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );

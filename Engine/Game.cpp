@@ -21,10 +21,12 @@
 #include "MainWindow.h"
 #include "Game.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd )
+	wnd(wnd),
+	gfx(wnd),
+	p1({ (float) Paddle::margin_offset,Graphics::ScreenHeight / 2 - (Paddle::default_height / 2) }),
+	p2({ Graphics::ScreenWidth-Paddle::default_width-Paddle::margin_offset,Graphics::ScreenHeight / 2 - (Paddle::default_height / 2) })
 {
 }
 
@@ -38,8 +40,12 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	p1.Update(wnd.kbd);
+	p2.Update(wnd.kbd);
 }
 
 void Game::ComposeFrame()
 {
+	p1.Draw(gfx);
+	p2.Draw(gfx);
 }

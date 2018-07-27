@@ -51,6 +51,7 @@ public:
 		dword = color.dword;
 		return *this;
 	}
+
 	constexpr unsigned char GetX() const
 	{
 		return dword >> 24u;

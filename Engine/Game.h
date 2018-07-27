@@ -23,6 +23,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
+#include "Paddle.h"
 
 class Game
 {
@@ -42,5 +43,7 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	Paddle_<Control_type::control1> p1;
+	Paddle_<Control_type::control2> p2;
 	/********************************/
 };
